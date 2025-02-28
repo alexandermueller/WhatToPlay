@@ -14,7 +14,7 @@ from helpers import *
 
 ################################################ Bot Init ################################################
 
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 bot = commands.Bot(command_prefix = '/', intents = intents)
 
 ################################################ Commands ################################################
