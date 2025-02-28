@@ -11,13 +11,55 @@ from discord.ui import *
 
 from constants import *
 from helpers import *
+from game_list_modal import GameListModal
 
 ################################################ Bot Init ################################################
 
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix = '/', intents = intents)
 
+################################################ Helpers #################################################
+
+def logCommand():
+    def predicate(interaction: discord.Interaction) -> bool:
+        if not interaction:
+            logException('interaction does not exist!')
+            return False
+
+        userMember = interaction.user
+        guild = interaction.guild
+        channel = interaction.channel
+        command = interaction.command
+
+        context = f'<{ guild.name }::#{ channel.name }>[@{ userMember.name }]: /{ command.name }'
+        arguments = ''.join([f" { option['name'] }={ option['value'] }" for option in interaction.data['options']]) if 'options' in interaction.data else ''
+
+        logEvent(context + arguments)
+        return True
+
+    return app_commands.check(predicate)
+
 ################################################ Commands ################################################
+
+## LIST ##
+
+@app_commands.guild_only()
+@logCommand()
+@bot.tree.command(name = 'list', description = f'Show your ranked games list.')
+@app_commands.describe()
+async def _list(interaction: discord.Interaction):
+    gameListModal = GameListModal()
+
+    await interaction.response.send_modal(gameListModal)
+    await gameListModal.wait()
+
+    gameList = gameListModal.gameList
+
+    return await interaction.followup.send(
+        content = f'Your game list:\n```{ gameList.list }```',
+        ephemeral = True
+    )
+
 
 @bot.event
 async def on_ready():
