@@ -45,7 +45,7 @@ def logCommand():
 
 @app_commands.guild_only()
 @logCommand()
-@bot.tree.command(name = 'list', description = f'Show your ranked games list.')
+@bot.tree.command(name = 'list', description = f'Update your ranked games list.')
 @app_commands.describe()
 async def _list(interaction: discord.Interaction):
     gameListModal = GameListModal()
@@ -56,7 +56,7 @@ async def _list(interaction: discord.Interaction):
     gameList = gameListModal.gameList
 
     return await interaction.followup.send(
-        content = f'Your game list:\n```{ gameList.list }```',
+        content = f'Your game list:\n```{ gameList.description() }```',
         ephemeral = True
     )
 

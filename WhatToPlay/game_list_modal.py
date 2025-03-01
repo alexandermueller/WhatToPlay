@@ -12,9 +12,10 @@ from game_list import GameList
 class GameListModal(discord.ui.Modal):
     def __init__(self, gameList: Optional[GameList] = None):
         placeholder = dedent('''\
-        [4, adventure, soulslike] Elden Ring
-        [4, vr, shooter] Player One
-        [3, horror, extraction] GTFO
+        Elden Ring
+        Player One
+        GTFO
+        Dora The Explorer
         ''')
 
         super().__init__(title = f'Update Your Game List:')
@@ -30,11 +31,8 @@ class GameListModal(discord.ui.Modal):
 
         self.add_item(self.gameListInput)
 
-    async def interaction_check(self, interaction):
-        ## TODO: Validate the list format?
-        return True
 
     async def on_submit(self, interaction: discord.Interaction):
-        self.gameList = GameList(list = self.gameListInput.value)
+        self.gameList = GameList(gameList = self.gameListInput.value)
         await interaction.response.defer()
 
