@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import discord
+import traceback
 
 ########################################## Helpers ##########################################
 
@@ -10,6 +10,10 @@ def chunks(thing, n):
 def logEvent(string):
     print(string)
 
+# TODO: this could send an error report to me via DM.
+def logException(string = None):
+    logEvent('-> Exception Encountered: ' + ('\n' + traceback.format_exc()) if not string else string)
+
 def describeCollection(collection):
     count = len(collection)
 
@@ -18,11 +22,29 @@ def describeCollection(collection):
     
     return (', '.join(collection[:-1]) + (', and ' if count > 2 else ' and ') + collection[-1]) if count > 1 else collection[0]
 
-async def getDMChannelFor(user):
-    if not user:
-        return None
-        
-    return await user.create_dm() if not user.dm_channel else user.dm_channel
+def delete(dictionary, key):
+    if key and key in dictionary:
+        del dictionary[key]
 
-def getMentionableNameStringFrom(member):
-    return '@%s#%s' % (member.name, member.discriminator)
+def get(array, index, default = None):
+  if not (0 <= index < len(array)):
+    return default
+
+  try:
+    return array[index]
+  except IndexError:
+    return default
+
+def retrieveNestedDictionary(dictionary, keys):
+    if not keys:
+        return None
+
+    value = dictionary
+
+    for key in keys:
+        if key not in value:
+            value[key] = {}
+
+        value = value[key]
+
+    return value

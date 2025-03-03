@@ -7,3 +7,4 @@ import sys
 
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN', None)
 
+DATABASE_NAME = 'what_to_play.db'

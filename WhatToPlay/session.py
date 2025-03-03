@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+
+import threading
+
+from helpers import delete, get
+
+
+sessions = {} # { Thread.id : Session }
+
+
+class Session:
+    def __init__(self):
+        self.isRestoringServer = False
+
+    def canSendMessages(self) -> bool:
+        return not self.isRestoringServer
+
+    def canUpdateBackend(self) -> bool:
+        return not self.isRestoringServer
+
+
+def removeCurrentSession():
+    global sessions
+    delete(sessions, threading.get_native_id())
+
+def currentSession() -> Session:
+    global sessions
+    threadID = threading.get_native_id()
+
+    if session := sessions.get(threadID):
+        return session
+
+    sessions[threadID] = Session()
+    return sessions[threadID]
