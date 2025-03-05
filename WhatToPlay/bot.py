@@ -12,6 +12,9 @@ from discord.ui import *
 # from backend_setup import SetupDatabase
 from constants import *
 from helpers import *
+from server import *
+from user import userFor
+
 from game_list_modal import GameListModal
 
 
@@ -38,7 +41,7 @@ def logCommand():
         channel = interaction.channel
         command = interaction.command
 
-        context = f'<{ guild.name }::#{ channel.name }>[@{ userMember.name }]: /{ command.name }'
+        context = f'{ f"<{ guild.name }::#{ channel.name }>" if interaction.is_guild_integration() else "" }[@{ userMember.name }]: /{ command.name }'
         arguments = ''.join([f" { option['name'] }={ option['value'] }" for option in interaction.data['options']]) if 'options' in interaction.data else ''
 
         logEvent(context + arguments)
@@ -56,18 +59,21 @@ def hasFinishedSettingUp():
 
 ## LIST ##
 
-@app_commands.guild_only()
 @logCommand()
 @hasFinishedSettingUp()
 @bot.tree.command(name = 'list', description = f'Update your ranked games list.')
 @app_commands.describe()
 async def _list(interaction: discord.Interaction):
-    gameListModal = GameListModal()
+    userID = interaction.user.id
+    user = await server.userFor(userID) if (guild := interaction.guild) and (server := await serverFor(guild.id)) else await userFor(userID)
+
+    gameListModal = GameListModal(gameList = user.gameList)
 
     await interaction.response.send_modal(gameListModal)
     await gameListModal.wait()
 
     gameList = gameListModal.gameList
+    await user.setGameList(gameList = gameList)
 
     return await interaction.followup.send(
         content = f'Your game list:\n```{ gameList.description() }```',
@@ -91,6 +97,8 @@ async def on_app_command_error(interaction: discord.Interaction, error: discord.
 
 ################################################ Events ##################################################
 
+
+# TODO: Add event handlers for when the bot is installed/uninstalled from guilds/users
 
 @bot.event
 async def on_ready():

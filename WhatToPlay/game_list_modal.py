@@ -26,7 +26,7 @@ class GameListModal(discord.ui.Modal):
             style = discord.TextStyle.long,
             placeholder = placeholder,
             required = True,
-            default = gameList.list if gameList else None
+            default = gameList.description() if gameList else None
         )
 
         self.add_item(self.gameListInput)
