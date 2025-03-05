@@ -76,7 +76,7 @@ async def _list(interaction: discord.Interaction):
     await user.setGameList(gameList = gameList)
 
     return await interaction.followup.send(
-        content = f'Your game list:\n```{ gameList.description() }```',
+        content = f'Your game list:\n```{ gameList.description() if gameList else "(Empty)" }```',
         ephemeral = True
     )
 

@@ -7,4 +7,4 @@ class GameList:
 		self.gameList = [game.strip() for game in gameList.split('\n')] if gameList else []
 
 	def description(self) -> str:
-		return '\n'.join(self.gameList) if self.gameList else '(Empty)'
+		return '\n'.join(self.gameList) if self.gameList else ''
