@@ -65,7 +65,7 @@ def hasFinishedSettingUp():
 @app_commands.describe()
 async def _list(interaction: discord.Interaction):
     userID = interaction.user.id
-    user = await server.userFor(userID) if (guild := interaction.guild) and (server := await serverFor(guild.id)) else await userFor(userID)
+    user = await server.userFor(userID) if interaction.is_guild_integration() and (server := await serverFor(interaction.guild.id)) else await userFor(userID, hasAppInstalled = True)
 
     gameListModal = GameListModal(gameList = user.gameList)
 

@@ -25,7 +25,7 @@ class GameListModal(discord.ui.Modal):
             label = f'Game List:',
             style = discord.TextStyle.long,
             placeholder = placeholder,
-            required = True,
+            required = False,
             default = gameList.description() if gameList else None
         )
 
