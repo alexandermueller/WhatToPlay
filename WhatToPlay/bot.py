@@ -13,9 +13,10 @@ from discord.ui import *
 from constants import *
 from helpers import *
 from server import *
-from user import userFor
+from user import User, fetchUser, userFor
 
 from game_list_modal import GameListModal
+from ranked_games import rankedGames
 
 
 ################################################ Bot Init ################################################
@@ -54,19 +55,23 @@ def hasFinishedSettingUp():
         return didSetup
     return app_commands.check(predicate)
 
+async def fetchUserFor(interaction: discord.Interaction) -> User:
+    if interaction.is_guild_integration() and (server := await serverFor(interaction.guild.id)):
+        return await server.userFor(interaction.user.id)
+    else:
+        return await userFor(interaction.user.id, hasAppInstalled = True)
+
 
 ################################################ Commands ################################################
+
 
 ## LIST ##
 
 @logCommand()
 @hasFinishedSettingUp()
-@bot.tree.command(name = 'list', description = f'Update your ranked games list.')
-@app_commands.describe()
+@bot.tree.command(name = 'list', description = f'Update your ranked multiplayer games list.')
 async def _list(interaction: discord.Interaction):
-    userID = interaction.user.id
-    user = await server.userFor(userID) if interaction.is_guild_integration() and (server := await serverFor(interaction.guild.id)) else await userFor(userID, hasAppInstalled = True)
-
+    user = await fetchUserFor(interaction = interaction)
     gameListModal = GameListModal(gameList = user.gameList)
 
     await interaction.response.send_modal(gameListModal)
@@ -76,7 +81,54 @@ async def _list(interaction: discord.Interaction):
     await user.setGameList(gameList = gameList)
 
     return await interaction.followup.send(
-        content = f'Your game list:\n```{ gameList.description() if gameList.list else "(Empty)" }```',
+        content = f'Your ranked multiplayer games list was updated successfully:\n```{ gameList.description(showRanks = True) }```',
+        ephemeral = True
+    )
+
+
+## WITH ##
+
+@logCommand()
+@hasFinishedSettingUp()
+@bot.tree.command(name = 'with', description = f'Generate a new mutually-ranked multiplayer games list.')
+@app_commands.describe(
+    player_two = PLAYER_TWO_DESCRIPTION,
+    player_three = PLAYER_THREE_DESCRIPTION,
+    player_four = PLAYER_FOUR_DESCRIPTION,
+    show_discovery_list = SHOW_DISCOVERY_LIST
+)
+async def _with(
+    interaction: discord.Interaction,
+    player_two: discord.Member,
+    player_three: Optional[discord.Member],
+    player_four: Optional[discord.Member],
+    show_discovery_list: Optional[bool] = False
+):
+    gameLists = []
+    players = [interaction.user, player_two, player_three, player_four]
+
+    for player in players:
+        if not player:
+            continue
+
+        if player.id == interaction.user.id and (user := await fetchUserFor(interaction = interaction)):
+            if not user.hasGameList():
+                return await interaction.response.send_message(
+                    content = 'Your ranked multiplayer games list is empty.',
+                    ephemeral = True
+                )
+        elif not (user := await fetchUser(id = player.id)) or not user.hasGameList():
+            return await interaction.response.send_message(
+                content = f'{ player.mention } does not have a ranked multiplayer games list.',
+                ephemeral = True
+            )
+
+        gameLists += [user.gameList]
+
+    await interaction.response.defer(ephemeral = True, thinking = True)
+
+    return await interaction.followup.send(
+        content = rankedGames(gameLists = gameLists, discoveryTopN = 4 if show_discovery_list else 0).description(), 
         ephemeral = True
     )
 
@@ -87,10 +139,16 @@ async def _list(interaction: discord.Interaction):
 @bot.tree.error
 async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
     if not didSetup:
-        return await interaction.response.send_message(content = 'Oops, you caught me in the middle of an update! Please try again in a few seconds.', ephemeral = True)
+        return await interaction.response.send_message(
+            content = 'Oops, you caught me in the middle of an update! Please try again in a few seconds.',
+            ephemeral = True
+        )
 
     if not interaction.user.guild_permissions.administrator:
-        return await interaction.response.send_message(content = "You are not able to use this command.", ephemeral = True)
+        return await interaction.response.send_message(
+            content = "You are not able to use this command.",
+            ephemeral = True
+        )
 
     logException()
 

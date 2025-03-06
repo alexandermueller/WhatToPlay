@@ -14,10 +14,19 @@ class User:
 		self.gameList = gameList
 		self.hasAppInstalled = hasAppInstalled
 
+	def hasGameList(self) -> bool:
+		return self.gameList and self.gameList.list
+
 	async def setGameList(self, gameList: Optional[GameList]):
 		self.gameList = gameList
 		# TODO: Schedule Gamelist Update Into Database Here
 
+
+async def fetchUser(id: int) -> Optional[User]:
+	if id not in users:
+		return None
+
+	return users[id]
 
 async def userFor(id: int, hasAppInstalled: bool = False) -> User:
 	global users
