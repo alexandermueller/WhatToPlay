@@ -69,22 +69,35 @@ async def fetchUserFor(interaction: discord.Interaction) -> User:
 
 @logCommand()
 @hasFinishedSettingUp()
-@bot.tree.command(name = 'list', description = f'Update your ranked multiplayer games list.')
-async def _list(interaction: discord.Interaction):
-    user = await fetchUserFor(interaction = interaction)
-    gameListModal = GameListModal(gameList = user.gameList)
+@bot.tree.command(name = 'list', description = f'Update your/show another player\'s ranked multiplayer games list.')
+@app_commands.describe(player = PLAYER_DESCRIPTION)
+async def _list(interaction: discord.Interaction, player: Optional[discord.Member]):
+    user = await fetchUserFor(interaction = interaction) if not player else await fetchUser(id = player.id)
 
-    await interaction.response.send_modal(gameListModal)
-    await gameListModal.wait()
+    if not player:
+        gameListModal = GameListModal(gameList = user.gameList)
 
-    gameList = gameListModal.gameList
-    await user.setGameList(gameList = gameList)
+        await interaction.response.send_modal(gameListModal)
+        await gameListModal.wait()
 
-    return await interaction.followup.send(
-        content = f'Your ranked multiplayer games list was updated successfully:\n```{ gameList.description(showRanks = True) }```',
+        gameList = gameListModal.gameList
+        await user.setGameList(gameList = gameList)
+
+        return await interaction.followup.send(
+            content = f'Your ranked multiplayer games list was updated successfully:\n```{ gameList.description(showRanks = True) }```',
+            ephemeral = True
+        )
+
+    if not user or not user.hasGameList():
+        return await interaction.response.send_message(
+            content = f'{ player.mention } does not have a ranked multiplayer games list.',
+            ephemeral = True
+        )
+
+    return await interaction.response.send_message(
+        content = f'{ player.mention }\'s ranked multiplayer games list:\n```{ user.gameList.description(showRanks = True) }```',
         ephemeral = True
     )
-
 
 ## WITH ##
 

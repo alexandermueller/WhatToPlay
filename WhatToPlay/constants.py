@@ -7,6 +7,7 @@ import sys
 
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN', None)
 
+PLAYER_DESCRIPTION = 'View this person\'s ranked list.'
 PLAYER_TWO_DESCRIPTION = 'Compare your ranked list against this person\'s ranked list.'
 PLAYER_THREE_DESCRIPTION = 'Also compare your ranked list against this person\'s ranked list.'
 PLAYER_FOUR_DESCRIPTION = 'Also compare your ranked list against this person\'s ranked list.'
