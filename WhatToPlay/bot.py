@@ -83,8 +83,8 @@ async def _list(interaction: discord.Interaction, player: Optional[discord.Membe
         gameList = gameListModal.gameList
         await user.setGameList(gameList = gameList)
 
-        return await interaction.followup.send(
-            content = f'Your ranked multiplayer games list was updated successfully:\n```{ gameList.description(showRanks = True) }```',
+        return await interaction.followup.send( # Weird backtick bug eats the first character
+            content = f'Your ranked multiplayer games list was updated successfully:```\n{ gameList.description() }```',
             ephemeral = True
         )
 
@@ -94,8 +94,8 @@ async def _list(interaction: discord.Interaction, player: Optional[discord.Membe
             ephemeral = True
         )
 
-    return await interaction.response.send_message(
-        content = f'{ player.mention }\'s ranked multiplayer games list:\n```{ user.gameList.description(showRanks = True) }```',
+    return await interaction.response.send_message( # Weird backtick bug eats the first character
+        content = f'{ player.mention }\'s ranked multiplayer games list:```\n{ user.gameList.description() }```',
         ephemeral = True
     )
 
@@ -141,7 +141,7 @@ async def _with(
     await interaction.response.defer(ephemeral = True, thinking = True)
 
     return await interaction.followup.send(
-        content = rankedGames(gameLists = gameLists, discoveryTopN = 4 if show_discovery_list else 0).description(), 
+        content = rankedGames(gameLists = gameLists, discoveryTopN = 4 if show_discovery_list else 0, userList = gameLists[0]).description(),
         ephemeral = True
     )
 

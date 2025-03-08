@@ -12,11 +12,15 @@ class RankedGames:
 
 	def description(self) -> str:
 		rankedGamesList = [f'{ i + 1 }. { game }' for (i, game) in enumerate(self.gameList)]
+
+		# Weird backtick bug eats the first character
 		discoveryListDescription = ('\nA few of the top games that did not appear in your list:```\n' + '\n'.join(self.discoveryList) + '```') if self.discoveryList else ''
-		return 'Games you should play together (in order of mutual-preference):\n```' + '\n'.join(rankedGamesList) + '```' + discoveryListDescription
+
+		# Weird backtick bug eats the first character
+		return 'Games you should play together (in order of mutual-preference):```\n' + '\n'.join(rankedGamesList) + '```' + discoveryListDescription
 
 
-def rankedGames(gameLists: List[GameList], discoveryTopN: int) -> Optional[RankedGames]:
+def rankedGames(gameLists: List[GameList], discoveryTopN: int, userList: GameList) -> Optional[RankedGames]:
 	class Game:
 		def __init__(self, rank: float, name: str):
 			self.rank = rank
@@ -54,7 +58,16 @@ def rankedGames(gameLists: List[GameList], discoveryTopN: int) -> Optional[Ranke
 			else:
 				ranked[name].rank += (i + 1) / count
 
+	games = {}
+
+	for game in ranked.values():
+		if game.rank not in games:
+			games[game.rank] = [game.name]
+			continue
+
+		games[game.rank] += [game.name]
+
 	return RankedGames(
-		gameList = [game.name for game in sorted(ranked.values(), key = lambda x: x.rank)],
-		discoveryList = sorted(discovery)
+		gameList = [', '.join(sorted(games[rank])) for rank in sorted(games.keys())],
+		discoveryList = sorted(discovery - set(userList.list))
 	)
