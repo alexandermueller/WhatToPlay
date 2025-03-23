@@ -1,1 +1,3 @@
 # WhatToPlay...
+
+A bot that compares and generates ranked multiplayer games lists to help you decide what you should play with your friends.
