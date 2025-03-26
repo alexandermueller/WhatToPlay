@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from typing import Optional
+from typing import Optional, Self
+
 
 class GameList:
 	def __init__(self, gameList: Optional[str] = None):
@@ -20,3 +21,10 @@ class GameList:
 
 	def description(self, showRanks = False) -> str:
 		return '\n'.join([f'{ i + 1 }. { game }' for (i, game) in enumerate(self.list)] if showRanks else self.list) if self.list else ''
+
+	def formattedList(self) -> Optional[str]:
+		return '\n'.join(self.list) if self.list else None
+
+	@staticmethod
+	def fromFormattedList(formattedList: Optional[str]) -> Optional[Self]:
+		return GameList(gameList = formattedList) if formattedList else None

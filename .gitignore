@@ -172,3 +172,4 @@ cython_debug/
 .DS_STORE
 
 .token.txt
+what_to_play.db

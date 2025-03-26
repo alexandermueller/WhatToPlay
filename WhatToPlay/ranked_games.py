@@ -12,11 +12,7 @@ class RankedGames:
 
 	def description(self) -> str:
 		rankedGamesList = [f'{ i + 1 }. { game }' for (i, game) in enumerate(self.gameList)]
-
-		# Weird backtick bug eats the first character
 		discoveryListDescription = ('\nA few of the top games that did not appear in your list:```\n' + '\n'.join(self.discoveryList) + '```') if self.discoveryList else ''
-
-		# Weird backtick bug eats the first character
 		return 'Games you should play together (in order of mutual-preference):```\n' + '\n'.join(rankedGamesList) + '```' + discoveryListDescription
 
 

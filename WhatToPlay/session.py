@@ -10,13 +10,13 @@ sessions = {} # { Thread.id : Session }
 
 class Session:
     def __init__(self):
-        self.isRestoringServer = False
+        self.isRestoringUsers = False
 
     def canSendMessages(self) -> bool:
-        return not self.isRestoringServer
+        return not self.isRestoringUsers
 
     def canUpdateBackend(self) -> bool:
-        return not self.isRestoringServer
+        return not self.isRestoringUsers
 
 
 def removeCurrentSession():

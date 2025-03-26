@@ -14,3 +14,4 @@ PLAYER_FOUR_DESCRIPTION = 'Also compare your ranked list against this person\'s 
 SHOW_DISCOVERY_LIST = 'Show the top 4 games from other players\' lists that didn\'t appear in yours.'
 
 DATABASE_NAME = 'what_to_play.db'
+PRUNE_USER_THRESHOLD_YEARS = 0.5

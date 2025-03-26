@@ -12,11 +12,13 @@ from discord.ui import *
 # from backend_setup import SetupDatabase
 from constants import *
 from helpers import *
-from server import *
 from user import User, fetchUser, userFor
 
 from game_list_modal import GameListModal
 from ranked_games import rankedGames
+
+from backend_setup import SetupDatabase
+from restore_users import restoreUsers
 
 
 ################################################ Bot Init ################################################
@@ -56,10 +58,14 @@ def hasFinishedSettingUp():
     return app_commands.check(predicate)
 
 async def fetchUserFor(interaction: discord.Interaction) -> User:
-    if interaction.is_guild_integration() and (server := await serverFor(interaction.guild.id)):
-        return await server.userFor(interaction.user.id)
-    else:
-        return await userFor(interaction.user.id, hasAppInstalled = True)
+    user = await userFor(id = interaction.user.id)
+
+    if interaction.is_guild_integration():
+        await user.addServerID(serverID = interaction.guild.id)
+
+    await user.setHasAppInstalled(hasAppInstalled = interaction.is_user_integration())
+
+    return user
 
 
 ################################################ Commands ################################################
@@ -83,8 +89,8 @@ async def _list(interaction: discord.Interaction, player: Optional[discord.Membe
         gameList = gameListModal.gameList
         await user.setGameList(gameList = gameList)
 
-        return await interaction.followup.send( # Weird backtick bug eats the first character
-            content = f'Your ranked multiplayer games list was updated successfully:```\n{ gameList.description() }```',
+        return await interaction.followup.send(
+            content = 'Your ranked multiplayer games list was updated successfully' + (f':```\n{ gameList.description() }```' if gameList.description() else '.'),
             ephemeral = True
         )
 
@@ -94,7 +100,7 @@ async def _list(interaction: discord.Interaction, player: Optional[discord.Membe
             ephemeral = True
         )
 
-    return await interaction.response.send_message( # Weird backtick bug eats the first character
+    return await interaction.response.send_message(
         content = f'{ player.mention }\'s ranked multiplayer games list:```\n{ user.gameList.description() }```',
         ephemeral = True
     )
@@ -157,11 +163,11 @@ async def on_app_command_error(interaction: discord.Interaction, error: discord.
             ephemeral = True
         )
 
-    if not interaction.user.guild_permissions.administrator:
-        return await interaction.response.send_message(
-            content = "You are not able to use this command.",
-            ephemeral = True
-        )
+    # if not interaction.user.guild_permissions.administrator:
+    #     return await interaction.response.send_message(
+    #         content = "You are not able to use this command.",
+    #         ephemeral = True
+    #     )
 
     logException()
 
@@ -177,11 +183,11 @@ async def on_ready():
 
     if not didSetup:
         if os.path.exists('what_to_play.db'):
-            logEvent('-> Rebuilding Players from database...')
-            # await restorePlayers(bot = bot)
+            logEvent('-> Rebuilding Users from database...')
+            await restoreUsers(bot = bot)
         else:
             logEvent('-> Building Database...')
-            # await SetupDatabase().execute()
+            await SetupDatabase().execute()
 
         didSetup = True
 
