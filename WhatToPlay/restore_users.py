@@ -11,6 +11,7 @@ from session import currentSession
 from user import userFor
 from game_list import GameList
 
+
 async def restoreUsers(bot: discord.ext.commands.Bot):
     class IDWrapper:
         def __init__(self, id):
