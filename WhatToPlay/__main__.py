@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import os
 import sys
@@ -9,16 +8,15 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import *
 
-# from backend_setup import SetupDatabase
-from constants import *
-from helpers import *
-from user import User, fetchUser, userFor
+from backend.setup import SetupDatabase
 
-from game_list_modal import GameListModal
-from ranked_games import rankedGames
+from datatypes.game_list_modal import GameListModal
+from datatypes.ranked_games import rankedGames
+from datatypes.user import User, fetchUser, userFor
 
-from backend_setup import SetupDatabase
-from restore_users import restoreUsers
+from utilities.constants import *
+from utilities.helpers import *
+from utilities.restore_users import restoreUsers
 
 
 ################################################ Bot Init ################################################
