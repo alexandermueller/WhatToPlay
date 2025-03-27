@@ -4,9 +4,9 @@ import asyncio
 
 from typing import List, Optional, Self, Tuple
 
+from ..datatypes.session import currentSession
 from ..utilities.constants import DATABASE_NAME
-from ..utilties.helpers import logException
-from ..utilities.session import currentSession
+from ..utilities.helpers import logException
 
 
 class SQLInstruction:

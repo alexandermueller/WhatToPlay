@@ -1,7 +1,7 @@
 
 from typing import List, Optional
 
-from game_list import GameList
+from .game_list import GameList
 
 
 class RankedGames:

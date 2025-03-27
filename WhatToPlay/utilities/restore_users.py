@@ -8,8 +8,8 @@ from ..datatypes.user import userFor
 from ..datatypes.game_list import GameList
 from ..datatypes.session import currentSession
 
-from constants import *
-from helpers import *
+from .constants import *
+from .helpers import *
 
 async def restoreUsers(bot: discord.ext.commands.Bot):
     class IDWrapper:

@@ -1,5 +1,5 @@
 
-from updates import SQLInstruction
+from .updates import SQLInstruction
 
 
 ### Users ###

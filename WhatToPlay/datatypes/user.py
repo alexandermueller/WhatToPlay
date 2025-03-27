@@ -3,7 +3,7 @@ from typing import List, Optional, Set, Tuple, Union
 
 from ..backend.updates import InsertUser, UpdateUserDetails
 
-from game_list import GameList
+from .game_list import GameList
 
 
 users = {} # { User.id : User }

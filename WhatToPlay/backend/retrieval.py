@@ -8,7 +8,7 @@ from typing import List, Optional, Self, Tuple
 from ..utilities.constants import DATABASE_NAME
 from ..utilities.helpers import logException, retrieveNestedDictionary
 
-from updates import SQLInstruction
+from .updates import SQLInstruction
 
 
 class SQLGetJSONInstruction(SQLInstruction):

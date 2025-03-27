@@ -8,15 +8,16 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ui import *
 
-from backend.setup import SetupDatabase
+from .backend.setup import SetupDatabase
 
-from datatypes.game_list_modal import GameListModal
-from datatypes.ranked_games import rankedGames
-from datatypes.user import User, fetchUser, userFor
+from .datatypes.ranked_games import rankedGames
+from .datatypes.user import User, fetchUser, userFor
 
-from utilities.constants import *
-from utilities.helpers import *
-from utilities.restore_users import restoreUsers
+from .ui.game_list_modal import GameListModal
+
+from .utilities.constants import *
+from .utilities.helpers import *
+from .utilities.restore_users import restoreUsers
 
 
 ################################################ Bot Init ################################################
@@ -210,9 +211,9 @@ def main(argc, argv):
         tokenFile = open('.token.txt', 'r')
 
     if tokenFile == None:
-        logEvent('-> Error: Token file "./.token.txt" couldn\'t be found in ".../WhatToPlay...-".')
+        logEvent('-> Error: Token file "./.token.txt" couldn\'t be found in ".../WhatToPlay...".')
         logEvent('->        Generate a new token on discord for your bot and place it inside')
-        logEvent('->        ".../WhatToPlay...-/.token.txt"')
+        logEvent('->        ".../WhatToPlay.../.token.txt"')
         exit()
 
     token = tokenFile.readline()
