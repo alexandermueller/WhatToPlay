@@ -8,8 +8,8 @@ setup: clean update venv
 
 clean:
 	@echo [make clean]: Started
-	$(shell rm -rf env 2>/dev/null)
-	$(shell rm -rf WhatToPlay/__pycache__ 2>/dev/null)
+	@rm -rf env 2>/dev/null
+	@rm -rf WhatToPlay/__pycache__ 2>/dev/null
 	@echo [make clean]: Finished
 
 update:
@@ -31,7 +31,7 @@ else
 	@echo [make venv]: Failed
 endif	
 
-# Run this via "source env/bin/activate && make venv-run || deactivate" to ensure the virtual environment is used and deactivated
+# Run this via "source env/bin/activate && make venv-run; deactivate && make clean"
 
 venv-run: install run
 
