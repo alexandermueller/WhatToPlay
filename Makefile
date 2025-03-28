@@ -1,7 +1,7 @@
 .PHONY: setup clean update venv venv-run install run
 
-PYENV:=$(shell which pyenv)
 SHELL:=/bin/bash
+PYENV:=$(shell which pyenv)
 VIRTUAL_ENV:=env
 
 setup: clean update venv
