@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
 
-from backend_updates import SQLInstruction
+from .updates import SQLInstruction
 
 
 ### Users ###

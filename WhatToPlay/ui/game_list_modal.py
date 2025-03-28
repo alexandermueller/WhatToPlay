@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import discord
 
@@ -6,7 +5,7 @@ from enum import Enum
 from textwrap import dedent
 from typing import List, Optional, Self
 
-from game_list import GameList
+from ..datatypes.game_list import GameList
 
 
 class GameListModal(discord.ui.Modal):

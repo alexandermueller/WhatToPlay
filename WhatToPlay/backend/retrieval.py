@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 import aiosqlite
 import asyncio
@@ -6,10 +5,10 @@ import asyncio
 from enum import Enum
 from typing import List, Optional, Self, Tuple
 
-from constants import DATABASE_NAME
-from helpers import logException, retrieveNestedDictionary
+from ..utilities.constants import DATABASE_NAME
+from ..utilities.helpers import logException, retrieveNestedDictionary
 
-from backend_updates import SQLInstruction
+from .updates import SQLInstruction
 
 
 class SQLGetJSONInstruction(SQLInstruction):

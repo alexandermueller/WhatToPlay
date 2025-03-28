@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 
 import threading
 
-from helpers import delete, get
+from ..utilities.helpers import delete, get
 
 
 sessions = {} # { Thread.id : Session }

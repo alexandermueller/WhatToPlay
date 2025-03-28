@@ -1,13 +1,12 @@
-#!/usr/bin/env python3
 
 import aiosqlite
 import asyncio
 
 from typing import List, Optional, Self, Tuple
 
-from constants import DATABASE_NAME
-from helpers import logException
-from session import currentSession
+from ..datatypes.session import currentSession
+from ..utilities.constants import DATABASE_NAME
+from ..utilities.helpers import logException
 
 
 class SQLInstruction:

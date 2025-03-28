@@ -1,16 +1,15 @@
-#!/usr/bin/env python3
 
 import discord
 
-from backend_retrieval import GetDatabaseRestoreJSON
-from backend_updates import *
-from constants import *
-from helpers import *
-from session import currentSession
+from ..backend.retrieval import GetDatabaseRestoreJSON
+from ..backend.updates import *
 
-from user import userFor
-from game_list import GameList
+from ..datatypes.user import userFor
+from ..datatypes.game_list import GameList
+from ..datatypes.session import currentSession
 
+from .constants import *
+from .helpers import *
 
 async def restoreUsers(bot: discord.ext.commands.Bot):
     class IDWrapper:

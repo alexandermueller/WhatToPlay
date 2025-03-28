@@ -1,12 +1,13 @@
-#!/usr/bin/env python3
 
 from typing import List, Optional, Set, Tuple, Union
 
-from game_list import GameList
-from backend_updates import InsertUser, UpdateUserDetails
+from ..backend.updates import InsertUser, UpdateUserDetails
+
+from .game_list import GameList
 
 
 users = {} # { User.id : User }
+
 
 ServerIDs = Union[Set[int], List[int]]
 
