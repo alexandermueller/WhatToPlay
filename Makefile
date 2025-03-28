@@ -29,7 +29,7 @@ ifdef PYENV
 else
 	@echo [make venv]: pyenv could not be found
 	@echo [make venv]: Failed
-endif	
+endif
 
 # Run this via "source env/bin/activate && make venv-run; deactivate && make clean"
 
