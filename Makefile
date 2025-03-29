@@ -10,6 +10,7 @@ clean:
 	@echo [make clean]: Started
 	@rm -rf env 2>/dev/null
 	@rm -rf WhatToPlay/__pycache__ 2>/dev/null
+	@rm -rf WhatToPlay/*/__pycache__ 2>/dev/null
 	@echo [make clean]: Finished
 
 update:
